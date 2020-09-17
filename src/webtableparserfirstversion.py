@@ -12,41 +12,37 @@ class WebTableParser:
         site = url of the table
         tableClassName = the class tag of the table (search into the HTML page source code using web browser)
     Instancing and functions (in this order in your main):
-        1 - yoursite = WebTableParser()
-        2 - yoursite.create('site', 'tableClassName')
-        3 - yourtable = yoursite.capture()
-        4 - yourdf = yoursite.parse(yourtable)
+        1 - yoursite = WebTableParser('site', 'tableClassName')
+        2 - yourtable = yoursite.capture()
+        3 - yourdf = yoursite.parse(yourtable)
     Returns:
         [type] pandas.core.frame.DataFrame
     """
-    site = ''
-    tableClassName = ''
 
-    @classmethod
-    def create(cls, site, tableClassName):
-        cls.site = site
-        cls.tableClassName = tableClassName
+    def __init__(self, site, tableClassName):
+        self.site = site
+        self.tableClassName = tableClassName
         pass
 
-    @classmethod
-    def capture(cls):
+    def capture(self):
         """Function captures information in website
         Returns:
             [type]: [bs4.element.Tag]
         """
         # URL request through web browser agent
-        siteurl = request.Request(cls.site, headers={'User-Agent': 'Mozilla/5.0'})
+        siteurl = request.Request(self.site, headers={'User-Agent': 'Mozilla/5.0'})
         page = request.urlopen(siteurl)
         soup = BeautifulSoup(page, 'html5lib')
-        table = soup.find('table', attrs={'class': cls.tableClassName})
+        table = soup.find('table', attrs={'class': self.tableClassName})
         return table
 
     def parse(self, table):
         """Function extracts, parses and load table data into a pandas dataframe
         Args:
-            table [type]: [bs4.element.Tag]
+            table ([type]): [description]
+
         Returns:
-            [type]: [pandas.core.frame.DataFrame]
+            [type]: [description]
         """
         # assembling information to the dataframe
         columns = 0
