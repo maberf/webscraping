@@ -5,11 +5,23 @@ from typing import List
 
 
 class WebTableParser:
+    """Class to extract and parse a website table
+    The table should be exactly like titles in columns and data in lines
+    Other kind of table can have miscfunction (or do not function)
+    Attributes:
+    site = url of the table
+    tableClassName = the tag class of the table (search into the HTML page source code using web browser)
+    Instancing and functions (in this order):
+    1 - yoursite = WebTableParser('site', 'tableClassName')
+    2 - yourtable = yoursite.capture()
+    3 - yourdf = yoursite.parse(yourtable)
+    Return:
+    [type] pandas.core.frame.DataFrame
+    """
 
-    def __init__(self, site, spdsheetClassName):
-        """objetc to read spreadsheets in websites"""
+    def __init__(self, site, tableClassName):
         self.site = site
-        self.spdsheetClassName = spdsheetClassName
+        self.tableClassName = tableClassName
         pass
 
     def capture(self):
@@ -21,34 +33,30 @@ class WebTableParser:
         siteurl = request.Request(self.site, headers={'User-Agent': 'Mozilla/5.0'})
         page = request.urlopen(siteurl)
         soup = BeautifulSoup(page, 'html5lib')
-        table = soup.find('table', attrs={'class': self.spdsheetClassName})
+        table = soup.find('table', attrs={'class': self.tableClassName})
         return table
 
     def parse(self, table):
-        # assembling information to dataframe
+        # assembling information to the dataframe
         columns = 0
         lines = 0
         columnnames: List[str] = []
-        #
-        for row in table.find_all('tr'):  # 1o rastreamento (estrutura)
-            # contar número de linhas e colunas
+        for row in table.find_all('tr'):  # 1st crawling (structure)
+            # lines and columns conuting
             td_tags = row.find_all('td')
             if len(td_tags) > 0:
                 lines += 1
                 if columns == 0:
                     columns = len(td_tags)
-        #
-            # captura o titulo das colunas - se tiver thead/th
+            # columns title cpature - key th
             th_tags = row.find_all('th')
             if len(th_tags) > 0 and len(columnnames) == 0:
                 for th in th_tags:
                     columnnames.append(th.get_text())
-        #
-        # criando o dataframe com o pandas para armazenar os dados
+        # pandas dataframe creation to data storage
         df = pd.DataFrame(columns=columnnames, index=range(0, lines))
         row_marker = 0
-        # percorre as celulas para extrair o texto e gravar no dataframe
-        for row in table.find_all('tr'):  # 2o rastreamento (carregamento df)
+        for row in table.find_all('tr'):  # 2nd crawling (loading dataframe)
             column_marker = 0
             columns = row.find_all('td')
             for column in columns:
