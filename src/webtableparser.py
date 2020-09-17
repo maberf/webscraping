@@ -6,9 +6,10 @@ from typing import List
 
 class WebTableParser:
 
-    def __init__(self, site, spdsheetId):
+    def __init__(self, site, key, spdsheetKey):
         self.site = site
-        self.spdsheetId = spdsheetId
+        self.key = key
+        self.spdsheetKey = spdsheetKey
         pass
 
     def capture(self):
@@ -16,8 +17,7 @@ class WebTableParser:
         siteurl = request.Request(self.site, headers={'User-Agent': 'Mozilla/5.0'})
         page = request.urlopen(siteurl)
         soup = BeautifulSoup(page, 'html5lib')
-        # all_table = soup.find_all('table')
-        table = soup.find('table', attrs={'id': self.spdsheetId})  # class_=self.spreadsheetClassName)
+        table = soup.find('table', attrs={self.key: self.spdsheetKey})
         return table
 
     def parse(self, table):
@@ -29,7 +29,6 @@ class WebTableParser:
         for row in table.find_all('tr'):  # 1o rastreamento (estrutura)
             # contar número de linhas e colunas
             td_tags = row.find_all('td')
-            # print(td_tags)
             if nColunas == 0:
                 nColunas = len(td_tags)
             if len(td_tags) > 0:

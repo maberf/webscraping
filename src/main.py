@@ -1,16 +1,23 @@
 # MAIN
 from webtableparser import WebTableParser
 
-site1 = WebTableParser('https://www.fundsexplorer.com.br/ranking', 'table-ranking')
+'''site1 = WebTableParser('https://www.fundsexplorer.com.br/ranking', 'class', 'table table-hover')
 table1 = site1.capture()
 df1 = site1.parse(table1)
 print(df1)
 # id='table-ranking' class='table table-hover'
 
-site2 = WebTableParser('http://www.idealsoftwares.com.br/indices/igp_m.html', 'tabA')
+site2 = WebTableParser('https://calculador.com.br/tabela/indice/IGP-M', 'class', 'table table-bordered table-striped table-hover table-fixed mb-0')
 table2 = site2.capture()
 df2 = site2.parse(table2)
-print(df2)
-#site2.parse(table2)
-# https://calculador.com.br/tabela/indice/IGP-M
-# class="tabelaValoresIndice table-striped table table-bordered table-hover mb-0"
+print(df2)'''
+
+site3 = WebTableParser('https://sidra.ibge.gov.br/home/ipca/brasil', 'id', 'ipca-q1')
+table3 = site3.capture()
+df3 = site3.parse(table3)
+print(df3)
+
+'''site4 = WebTableParser('https://pt.wikipedia.org/wiki/Lista_de_capitais_do_Brasil_por_%C3%A1rea', 'class', 'wikitable sortable')
+table4 = site4.capture()
+df4 = site4.parse(table4)
+print(df4)'''
