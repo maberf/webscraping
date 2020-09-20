@@ -64,5 +64,9 @@ df = df.fillna(0)  # all NaNs filled with zero
 # df['liqdiariaNeg'] = df['liqdiariaNeg'].replace(np.nan, 0, regex=True)  # column by column with regex
 df['liqdiariaNeg'] = df['liqdiariaNeg'].astype('int64')
 df['qtdativosN'] = df['qtdativosN'].astype('int64')
-print(df)
-print(df.info())
+# Filters in real state funds
+fiis = df.loc[df['qtdativosN'] >= 10]  # 1st filter >= 10 assets
+fiis = fiis.loc[fiis['liqdiariaNeg'] >= 1000]  # 2nd filter tradings >= 1000 tradings/day
+fiis = fiis.loc[fiis['patrliqR$'] >= 500000000.00]  # 3rd filter assets > BRL 500 MM
+fiis = fiis.loc[fiis['p/vpaN'] <= 1.25]  # 5th filter P/VPA <= 1.25
+print(fiis)
