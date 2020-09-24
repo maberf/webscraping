@@ -68,5 +68,7 @@ df['qtdativosN'] = df['qtdativosN'].astype('int64')
 fiis = df.loc[df['qtdativosN'] >= 10]  # 1st filter >= 10 assets
 fiis = fiis.loc[fiis['liqdiariaNeg'] >= 1000]  # 2nd filter tradings >= 1000 tradings/day
 fiis = fiis.loc[fiis['patrliqR$'] >= 500000000.00]  # 3rd filter assets > BRL 500 MM
+fiis = fiis.loc[fiis['dy12macum%'] >= 4.00]  # 4th filter DY year >= 4%
 fiis = fiis.loc[fiis['p/vpaN'] <= 1.25]  # 5th filter P/VPA <= 1.25
+fiis = fiis.loc[fiis['vacfisica%'] <= 15]  # 6th filter vacancy <= 15%
 print(fiis)
