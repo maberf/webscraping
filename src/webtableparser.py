@@ -67,7 +67,7 @@ class WebTableParser:
         # pandas dataframe creation to data storage
         df = pd.DataFrame(columns=columnnames, index=range(0, lines))
         row_marker = 0
-        for row in table.find_all('tr'):  # 2nd crawling (loading dataframe)
+        for row in table.find_all('tr'):  # 2nd crawling (dataframe load)
             column_marker = 0
             columns = row.find_all('td')
             for column in columns:
