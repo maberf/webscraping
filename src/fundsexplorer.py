@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def processFE_df(df):
-    """Function to process Pandas DataFrame from Funds Explorer site:
+    """Function to process Pandas dataframe from Funds Explorer site:
     'https://www.fundsexplorer.com.br/ranking'
     After this function the DataFrame can be filtered to analysis
     Args:
