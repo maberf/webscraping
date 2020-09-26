@@ -10,7 +10,8 @@ class WebTableParser:
     Other kind of table can have miscfunction (or do not function)
     Args:
         site = url of the table
-        tableClassName = the class tag of the table (search into the HTML page source code using web browser)
+        tableClassName = the class tag of the table (search into \
+        the HTML page source code using web browser)
     Instancing and functions (in this order in your main):
         1 - yoursite = WebTableParser('site', 'tableClassName')
         2 - yourtable = yoursite.capture()
@@ -30,7 +31,8 @@ class WebTableParser:
             [type]: [bs4.element.Tag]
         """
         # URL request through web browser agent
-        siteurl = request.Request(self.site, headers={'User-Agent': 'Mozilla/5.0'})
+        siteurl = request.Request(self.site,
+                                  headers={'User-Agent': 'Mozilla/5.0'})
         page = request.urlopen(siteurl)
         soup = BeautifulSoup(page, 'html5lib')
         table = soup.find('table', attrs={'class': self.tableClassName})
