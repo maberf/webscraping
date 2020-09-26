@@ -1,74 +1,59 @@
 # MAIN
 from webtableparser import WebTableParser
-import pandas as pd
+from fundsexplorer import processFE_df
+# import pandas as pd
 # import numpy as np
-# import re
-
+# from matplotlib import pyplot as plt
+import plotly.offline as py
+import plotly.graph_objs as go
+#
 '''Sites for testing
 
 site1 = WebTableParser()
-site1.create('https://calculador.com.br/tabela/indice/IGP-M', 'table table-bordered table-striped table-hover table-fixed mb-0')
+site1.create('https://calculador.com.br/tabela/indice/IGP-M',
+            'table table-bordered table-striped table-hover table-fixed mb-0')
 table1 = site1.capture()
 df1 = site1.parse(table1)
 print(df1)
 
 site2 = WebTableParser()
-site2.create('https://pt.wikipedia.org/wiki/Lista_de_capitais_do_Brasil_por_%C3%A1rea', 'wikitable sortable')
+site2.create('https://pt.wikipedia.org/wiki/Lista_de_capitais_do_Brasil_por_%C3%A1rea',
+            'wikitable sortable')
 table2 = site2.capture()
 df2 = site2.parse(table2)
 print(df2)'''
-
+# site capture and parsing
 site = WebTableParser()
-site.create('https://www.fundsexplorer.com.br/ranking', 'table table-hover')
+site.create('https://www.fundsexplorer.com.br/ranking',
+            'table table-hover')
 table = site.capture()
 df = site.parse(table)
-
-# Dataframe manipulation should be done according with the table
-df.columns = ['codigo', 'setor', 'precoatualR$', 'liqdiariaNeg', 'dividR$', 'divyield%', 'dy3macum%', 'dy6macum%', 'dy12macum%', 'dy3mmedia%', 'dy6mmedia%', 'dy12mmedia%', 'dyano%',  'varpreco%', 'rentper%', 'rentacum%', 'patrliqR$', 'vpaR$', 'p/vpaN', 'dypatr%', 'varpatr%', 'rentpatrper%', 'rentpatracum%', 'vacfisica%', 'vacfinan%', 'qtdativosN']
-df = df.applymap(lambda x: str(x).replace('R$', ''))
-df = df.applymap(lambda x: str(x).replace('%', ''))
-df['precoatualR$'] = df['precoatualR$'].apply(lambda x: str(x).replace('.', ''))
-df['patrliqR$'] = df['patrliqR$'].apply(lambda x: str(x).replace('.', ''))
-df['vpaR$'] = df['vpaR$'].apply(lambda x: str(x).replace('.', ''))
-df = df.applymap(lambda x: str(x).replace(',', '.'))
-df['setor'] = df['setor'].apply(lambda x: str(x).replace('Ã', 'i'))
-# df['setor'] = df['setor'].apply(lambda x: re.sub(r'Ã ', 'i', x)) #alternative using regex (import re needed)
-df['codigo'] = df['codigo'].astype('string')
-df['setor'] = df['setor'].astype('string')
-df['precoatualR$'] = pd.to_numeric(df['precoatualR$'], errors='coerce')
-df['liqdiariaNeg'] = pd.to_numeric(df['liqdiariaNeg'], errors='coerce')
-df['dividR$'] = pd.to_numeric(df['dividR$'], errors='coerce')
-df['divyield%'] = pd.to_numeric(df['divyield%'], errors='coerce')
-df['dy3macum%'] = pd.to_numeric(df['dy3macum%'], errors='coerce')
-df['dy6macum%'] = pd.to_numeric(df['dy6macum%'], errors='coerce')
-df['dy12macum%'] = pd.to_numeric(df['dy12macum%'], errors='coerce')
-df['dy3mmedia%'] = pd.to_numeric(df['dy3mmedia%'], errors='coerce')
-df['dy6mmedia%'] = pd.to_numeric(df['dy6mmedia%'], errors='coerce')
-df['dy12mmedia%'] = pd.to_numeric(df['dy12mmedia%'], errors='coerce')
-df['dyano%'] = pd.to_numeric(df['dyano%'], errors='coerce')
-df['varpreco%'] = pd.to_numeric(df['varpreco%'], errors='coerce')
-df['rentper%'] = pd.to_numeric(df['rentper%'], errors='coerce')
-df['rentacum%'] = pd.to_numeric(df['rentacum%'], errors='coerce')
-df['patrliqR$'] = pd.to_numeric(df['patrliqR$'], errors='coerce')
-df['vpaR$'] = pd.to_numeric(df['vpaR$'], errors='coerce')
-df['p/vpaN'] = pd.to_numeric(df['p/vpaN'], errors='coerce')
-df['dypatr%'] = pd.to_numeric(df['dypatr%'], errors='coerce')
-df['varpatr%'] = pd.to_numeric(df['varpatr%'], errors='coerce')
-df['rentpatrper%'] = pd.to_numeric(df['rentpatrper%'], errors='coerce')
-df['rentpatracum%'] = pd.to_numeric(df['rentpatracum%'], errors='coerce')
-df['vacfisica%'] = pd.to_numeric(df['vacfisica%'], errors='coerce')
-df['vacfinan%'] = pd.to_numeric(df['vacfinan%'], errors='coerce')
-df['qtdativosN'] = pd.to_numeric(df['qtdativosN'], errors='coerce')
-df = df.fillna(0)  # all NaNs filled with zero
-# df['liqdiariaNeg'] = df['liqdiariaNeg'].fillna(0)   # column by column if needed
-# df['liqdiariaNeg'] = df['liqdiariaNeg'].replace(np.nan, 0, regex=True)  # column by column with regex
-df['liqdiariaNeg'] = df['liqdiariaNeg'].astype('int64')
-df['qtdativosN'] = df['qtdativosN'].astype('int64')
-# Filters in real state funds
-fiis = df.loc[df['qtdativosN'] >= 10]  # 1st filter >= 10 assets
-fiis = fiis.loc[fiis['liqdiariaNeg'] >= 1000]  # 2nd filter tradings >= 1000 tradings/day
-fiis = fiis.loc[fiis['patrliqR$'] >= 500000000.00]  # 3rd filter assets > BRL 500 MM
-fiis = fiis.loc[fiis['dy12macum%'] >= 4.00]  # 4th filter DY year >= 4%
-fiis = fiis.loc[fiis['p/vpaN'] <= 1.25]  # 5th filter P/VPA <= 1.25
-fiis = fiis.loc[fiis['vacfisica%'] <= 15]  # 6th filter vacancy <= 15%
-print(fiis)
+#
+# real state fund varible, df processing to make analysis feasible (filters)
+rsf = processFE_df(df)
+#
+# dataframe to real state funds (rsf) being filtered
+rsf = rsf.loc[rsf['dy12macum%'] >= 4.00]  # 1st filter DY > 4%
+rsf = rsf.loc[rsf['patrliqR$'] >= 500000000.00]  # 2nd filter > BRL 500 M
+rsf = rsf.loc[rsf['liqdiariaNeg'] >= 1000]  # 3rd filter tradings >= 1000/day
+rsf = rsf.loc[rsf['p/vpaN'] <= 1.25]  # 4th filter P/VPA <= 1.25
+# Splitting in brick and paper funds
+rsf_brick = rsf.loc[rsf['qtdativosN'] >= 10]  # 5th filter >= 10 assets
+rsf_paper = rsf.loc[rsf['qtdativosN'] == 0]  # 5 th filter = 0 assets
+#
+# pd.options.plotting.backend="plotly"
+py.init_notebook_mode(connected=True)
+#
+x = [rsf_brick['setor'], rsf_brick['codigo']]
+trace0 = go.Bar(x=x, y=rsf_brick['dy12macum%'],
+                name='DY% Ano', marker_color='rgb(36, 124, 220)')
+trace1 = go.Bar(x=x, y=rsf_brick['p/vpaN'],
+                name='P/VPA', marker_color='rgb(85, 171, 124)')
+trace2 = go.Bar(x=x, y=rsf_brick['vacfisica%'],
+                name='%Vacância Física', marker_color='rgb(213, 83, 43)')
+data = [trace0, trace1, trace2]
+fig = go.Figure(data)
+fig.update_layout(title='ANÁLISE FIIs TIJOLOS | DY Ano >= 4%, Patr. > 500M, \
+    Neg/dia > 1000, P/VPA =< 1.25, Ativos >= 10, Vacância Física < 15%')
+fig.show()
+py.plot(fig)
