@@ -2,7 +2,7 @@
 # packages urllib, beatiful soup, html5, pandas
 #
 # from webtableparserpreviousversion import WebTableParser
-from webtableparser import WebTableParser
+from src.webtableparser import WebTableParser
 #
 # Sites 1 e 2 for testing (remove comments)
 '''site1 = WebTableParser()
