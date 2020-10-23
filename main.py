@@ -12,7 +12,8 @@ table1 = site1.capture()
 df1 = site1.parse(table1)
 print(df1)'''
 # Site by webtableparserpreviousversion module
-'''site2 = WebTableParser('https://pt.wikipedia.org/wiki/Lista_de_capitais_do_Brasil_por_%C3%A1rea',
+'''site2 = WebTableParser('https://pt.wikipedia.org/wiki/\
+    Lista_de_capitais_do_Brasil_por_%C3%A1rea',
                        'wikitable sortable')
 table2 = site2.capture()
 df2 = site2.parse(table2)
