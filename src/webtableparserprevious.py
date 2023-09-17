@@ -51,7 +51,7 @@ class WebTableParser:
         lines = 0
         columnnames: List[str] = []
         for row in table.find_all('tr'):  # 1st crawling (structure)
-            # lines and columns conuting
+            # lines and columns counting
             td_tags = row.find_all('td')
             if len(td_tags) > 0:
                 lines += 1
