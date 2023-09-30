@@ -57,7 +57,7 @@ class WebTableParser:
                 lines += 1
                 if columns == 0:
                     columns = len(td_tags)
-            # columns title cpature - key th
+            # columns title capture - key th
             th_tags = row.find_all('th')
             if len(th_tags) > 0 and len(columnnames) == 0:
                 for th in th_tags:
