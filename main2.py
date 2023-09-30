@@ -4,9 +4,9 @@
 from src.webtableparser2 import WebTableParser
 #
 # Site capture and parsing
-'''site = WebTableParser()
-site.create('https://www.fundsexplorer.com.br/ranking',
-            'id', 'table-ranking')
+site = WebTableParser()
+site.create('https://pt.wikipedia.org/wiki/Lista_de_capitais_do_Brasil_por_%C3%A1rea',
+            'wikitable sortable')
 table = site.capture()
 df = site.parse(table)
-print(df)'''
+print(df)

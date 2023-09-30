@@ -10,26 +10,22 @@ class WebTableParser:
     Other kind of table can have miscfunction (or do not function)
     Args:
         site = url of the table
-        tableKey = key type of HTML tag used to get the table.\
-            "id" or "class" are a typical values.
-        tableName = the name tag of the table (search into \
+            tableName = the name tag of the table (search into \
             the HTML page source code using web browser inspection)
     Instancing and functions (in this order in your main):
         1 - yoursite = WebTableParser()
-        2 - yoursite.create('site', 'tableKey', 'tableName')
+        2 - yoursite.create('site', 'tableName')
         3 - yourtable = yoursite.capture()
         4 - yourdf = yoursite.parse(yourtable)
     Returns:
         [type] pandas.core.frame.DataFrame
     """
     site = ''
-    tableKey = ''
     tableName = ''
 
     @classmethod
-    def create(cls, site, tableKey, tableName):
+    def create(cls, site, tableName):
         cls.site = site
-        cls.tableKey = tableKey
         cls.tableName = tableName
         pass
 
@@ -44,7 +40,7 @@ class WebTableParser:
                                   headers={'User-Agent': 'Mozilla/5.0'})
         page = request.urlopen(siteurl)
         soup = BeautifulSoup(page, 'html5lib')
-        table = soup.find('table', attrs={cls.tableKey: cls.tableName})
+        table = soup.find('table', attrs={cls.tableName})
         return table
 
     def parse(self, table):
